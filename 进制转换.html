@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>进制转换</title>
+</head>
+<body>
+	
+</body>
+
+<script>
+    // 2020年6月29，这是一道面试机试题
+    //  二进制与六十二进制转换的题目
+    //  开始思路，依照二进制与十进制转换的思路考虑
+    //  后面想起，a到Z字母要对应数字，
+    //  就这样消耗了一个下午的时光
+    //  正常而言，可以在二到六十二进制之间转换
+
+    // 二进制  n进制 互相转换
+    const sixto = "1a"
+    const twoto = "1000000"
+    // 二进制 转 n进制
+    function encode () {
+      let ten = nToTen(twoto, 2)
+      let sixty = tToN(ten, 62)
+      console.log(ten, sixty)
+
+      return sixty
+    }
+    function dencode () {
+      let ten = nToTen(sixto, 62)
+      let two = tToN(ten, 2)
+
+      console.log(ten, two)
+      return two
+    }
+
+    // 数字与字母对应10到61
+    function charToNumber () {
+      let valueNum = []
+      let valueChar = []
+      let count = 10 
+      let ch = "a"
+      let temp
+      while(count<62) {
+        valueNum[ch] = count
+        valueChar[count] = ch
+        temp = ch.charCodeAt()
+        // console.log(temp)
+        if (temp == 122) {
+            temp -= 57
+        } else {
+            temp++            
+        }
+        // 十进制换成字符
+        ch = String.fromCodePoint(temp)
+        count++
+      }
+      // 返回字母对数字，数字对字母两个数组
+      return [valueNum, valueChar]
+    }
+
+    
+    // n进制转换十进制 n<10
+    let valueNum = charToNumber()[0]
+    // function nToTen(two, n = 2){
+    //   let ten = 0;
+    //   two = String(two)
+    //   let length = two.length
+    //   for (let i = 0, j = length-1; i < length; i++, j--) {
+    //       ten += Number(two[i]) * Math.pow(n,j)
+    //   }  
+    //   return ten
+    // }
+    
+
+    function nToTen(two, n = 2){
+      let ten = 0;
+      two = String(two)
+      let length = two.length
+      for (let i = 0, j = length-1; i < length; i++, j--) {
+          let jishu = isNaN(two[i]) ? valueNum[two[i]] : two[i]
+          // console.log(jishu, 'jishu')
+          ten += jishu * Math.pow(n,j)
+      }  
+      return ten
+    }
+    
+
+    // 十进制转换成 n进制 n<10 ,递归，采用了尾调用优化
+    // function tenToN(ten,n = 2, mod = "") {
+    //   let oldMod = mod
+    //    if (ten < n) {
+    //        return String(ten) + String(oldMod)
+    //    }        
+    //    let newMod = ten%n
+    //    ten = Math.floor(ten/n)
+    //    return tenToN(ten, n, String(newMod) + String(oldMod) )
+    // }
+
+    // 十进制转换成 n进制
+    let valueChar = charToNumber()[1]
+    function tToN(num, tn = 2, mod = "") {
+      let ten = num
+      let oldMod = mod 
+       if (ten < tn) {
+           return ten + oldMod
+       }        
+       let newMod = ten%tn < 10 ? ten%tn : valueChar[ten%tn]
+       ten = Math.floor(ten/tn)
+       return tToN(ten, tn, newMod + oldMod )
+    }
+    // console.log( nToTen(sixto, 62) )
+    encode()
+    dencode()
+
+</script>
+</html>
