@@ -1,0 +1,1 @@
+echart 2019年10月23日进行更新，这里不再建议使用document.getElementById的方式获取元素的id,而是建议使用ref来代替。这样的话就会避免Echarts的图形容器还未生成就对其进行了初始化
